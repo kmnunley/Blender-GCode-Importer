@@ -5,16 +5,20 @@
 
 ## About
 
-Blender GCode Importer is a simple plug-in that translates printer GCode into Bezier curves in Blender. This results in a very performant representation of the object in a highly customizable format.
+Blender GCode Importer is a simple plug-in that translates printer GCode into Bezier curve paths in Blender. This results in a very performant representation of the object in a highly customizable format.
 
 ## Installation
 To install the plugin, download the repository. Then go to Preferences > Addons and click the Install button. Find the gcode_importer.py file from the repository and click install.
 
-## Common Uses
-WIP
+## Usage
+To import a GCode file to Blender, simply go to File > Import and select the GCode option. In the new file browser window, find and select the .gcode file you would ike to import, then click 'Import Gcode'
 
 ## FAQ
-WIP
+**How long do models take to import?**<br>
+This depends heavily on the computer you are running on, but imports can take anywhere from just a couple seconds to several minutes depening on the size and complexity of the model that is being imported.
+
+**How do I give the imported paths thickness?**<br>
+These options can be found in the Properties area (bottom right panel in the default layout) when a path is selected. Under the 'Object Data Properties' tab there is a 'Geometry' dropdown. Under this dropdown, the two most useful values are 'Extrusion' and 'Bevel'. Adjust these values until the desired look of the model has been reached.
 
 ## Planned Features
 - Add import options for things such as skipping layers, path resolution, or defining custom GCode parameters.
