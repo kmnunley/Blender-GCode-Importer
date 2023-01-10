@@ -1,6 +1,5 @@
 import bpy
 import os
-import threading
 
 from bpy.props import StringProperty
 from bpy_extras.io_utils import ImportHelper
@@ -14,7 +13,7 @@ bl_info = {
     "location": "File > Import",
     "description": "Import GCode files and visualize them as 3D models",
     "warning": "",
-    "doc_url": "",
+    "doc_url": "https://github.com/kmnunley/Blender-GCode-Importer",
     "category": "Import-Export",
 }
 
