@@ -1,5 +1,8 @@
 # Blender-GCode-Importer
 
+![A 3D render of a low-poly Thinker statue](/images/low_poly_thinker.png)
+<sup>*Lowest Poly The Thinker* model by [LXO on Printables.com](https://www.printables.com/model/1165-lowest-poly-the-thinker)</sup>
+
 ## About
 
 Blender GCode Importer is a simple plug-in that translates printer GCode into Bezier curves in Blender. This results in a very performant representation of the object in a highly customizable format.
