@@ -53,14 +53,17 @@ def create_paths(gcode_lines):
         if command == "G1":
 
             for param in params:
-                if param[0] == "X":
-                    x = float(param[1:])
-                elif param[0] == "Y":
-                    y = float(param[1:])
-                elif param[0] == "Z":
-                    z = float(param[1:])
-                elif param[0] == "E":
-                    e = float(param[1:])
+                try:
+                    if param[0] == "X":
+                        x = float(param[1:])
+                    elif param[0] == "Y":
+                        y = float(param[1:])
+                    elif param[0] == "Z":
+                        z = float(param[1:])
+                    elif param[0] == "E":
+                        e = float(param[1:])
+                except:
+                    pass
 
             if e > 0:
                 # Update the toolhead position and add the point to the curve data
