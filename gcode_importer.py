@@ -73,7 +73,7 @@ def create_paths(gcode_lines):
 
             else:
                 # Check if there are enough points to create a curve
-                if points >= 3:
+                if points >= 2:
                     # Dump the curve data to a new curve object
                     # Create a new curve object
                     curve_data = bpy.data.curves.new("Path", type='CURVE')
