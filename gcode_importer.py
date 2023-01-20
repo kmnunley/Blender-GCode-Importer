@@ -101,7 +101,7 @@ def create_paths(gcode_lines):
                     # Create a new curve object
                     curve_data = bpy.data.curves.new("Path", type='CURVE')
                     curve_data.dimensions = '3D'
-                    curve_data.resolution_u = 1
+                    curve_data.use_fill_caps = True
 
                     # Create a curve spline and add the toolhead position as a control point
                     curve_spline = curve_data.splines.new('BEZIER')
@@ -111,6 +111,8 @@ def create_paths(gcode_lines):
                         else:
                             curve_spline.bezier_points.add(1)
                             curve_spline.bezier_points[-1].co = point
+                        curve_spline.bezier_points[-1].handle_left = point
+                        curve_spline.bezier_points[-1].handle_right = point
 
                     # Create a new object to hold the curve data
                     curve_object = bpy.data.objects.new("Path", curve_data)
