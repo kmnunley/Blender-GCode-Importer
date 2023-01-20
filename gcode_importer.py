@@ -24,6 +24,10 @@ def create_paths(gcode_lines):
     # Create an empty collection to store the paths
     collection = bpy.data.collections.new("Paths")
 
+    current_material = "T0"
+    materials = {}
+    default_line_diameter = 0.2
+
     x = 0
     y = 0
     z = 0
@@ -79,6 +83,10 @@ def create_paths(gcode_lines):
                     curve_data = bpy.data.curves.new("Path", type='CURVE')
                     curve_data.dimensions = '3D'
                     curve_data.resolution_u = 1
+                    curve_data.bevel_depth = default_line_diameter
+                    if not current_material in materials:
+                        materials[current_material] = bpy.data.materials.new(current_material)
+                    curve_data.materials.append(materials[current_material])
 
                     # Create a curve spline and add the toolhead position as a control point
                     curve_spline = curve_data.splines.new('BEZIER')
@@ -101,7 +109,9 @@ def create_paths(gcode_lines):
                 points = 0
                 point_data = []
 
-                
+        # Handle tool change commands
+        elif command[:1] == "T":
+            current_material = command
 
 
 def import_gcode(filepath):
