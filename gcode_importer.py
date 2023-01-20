@@ -28,15 +28,31 @@ def create_paths(gcode_lines):
     materials = {}
     default_line_diameter = 0.2
 
+    absolute_coord = True
+    absolute_extrude = False
+
     x = 0
     y = 0
     z = 0
     e = 0
-
-    points = 0
+    max_e = 0
     point_data = []
 
-
+    def get_params(params):
+        coord = [None, None, None, None]
+        for param in params:
+            try:
+                if param[0] == "X":
+                    coord[0] = float(param[1:])
+                elif param[0] == "Y":
+                    coord[1] = float(param[1:])
+                elif param[0] == "Z":
+                    coord[2] = float(param[1:])
+                elif param[0] == "E":
+                    coord[3] = float(param[1:])
+            except:
+                pass
+        return tuple(coord)
 
     # Iterate through the gcode instructions
     for line in gcode_lines:
@@ -54,30 +70,37 @@ def create_paths(gcode_lines):
         params = words[1:]
 
         # Handle the movement command
-        if command == "G1":
+        if command == "G1" or command == "G0":
+            coord = get_params(params)
 
-            for param in params:
-                try:
-                    if param[0] == "X":
-                        x = float(param[1:])
-                    elif param[0] == "Y":
-                        y = float(param[1:])
-                    elif param[0] == "Z":
-                        z = float(param[1:])
-                    elif param[0] == "E":
-                        e = float(param[1:])
-                except:
-                    pass
+            if absolute_coord:
+                toolhead_pos = (
+                    toolhead_pos[0] if coord[0] is None else coord[0],
+                    toolhead_pos[1] if coord[1] is None else coord[1],
+                    toolhead_pos[2] if coord[2] is None else coord[2]
+                )
+            else:
+                toolhead_pos = toolhead_pos + (
+                    0 if coord[0] is None else coord[0],
+                    0 if coord[1] is None else coord[1],
+                    0 if coord[2] is None else coord[2]
+                )
 
-            if e > 0:
+            if coord[3] is not None:
+                if absolute_extrude:
+                    e = coord[3]
+                else:
+                    e = e + coord[3]
+
+
+            if e >= max_e:
                 # Update the toolhead position and add the point to the curve data
-                toolhead_pos = (x, y, z)
-                points += 1
                 point_data.append(toolhead_pos)
-
+                max_e = e
+            
             else:
                 # Check if there are enough points to create a curve
-                if points >= 2:
+                if len(point_data) >= 2:
                     # Dump the curve data to a new curve object
                     # Create a new curve object
                     curve_data = bpy.data.curves.new("Path", type='CURVE')
@@ -106,8 +129,35 @@ def create_paths(gcode_lines):
                     collection.objects.link(curve_object)
                 
                 # Reset the point data
-                points = 0
                 point_data = []
+
+        # Handle mode commands
+        elif command == "M82":
+            absolute_extrude = True
+
+        elif command == "M83":
+            absolute_extrude = False
+
+        elif command == "G90":
+            absolute_coord = True
+            absolute_extrude = True
+
+        elif command == "G91":
+            absolute_coord = False
+            absolute_extrude = False
+
+        elif command == "G92":
+            coord = get_params(params)
+
+            toolhead_pos = (
+                toolhead_pos[0] if coord[0] is None else coord[0],
+                toolhead_pos[1] if coord[1] is None else coord[1],
+                toolhead_pos[2] if coord[2] is None else coord[2]
+            )
+
+            if coord[3] is not None:
+                e = coord[3]
+                max_e = e
 
         # Handle tool change commands
         elif command[:1] == "T":
